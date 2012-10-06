@@ -17,6 +17,15 @@ public class EventManager {
 	private Server server;
 	private HashMap<String, AbstractEvent> events;
 	
+	public static String buildResponse (Object[] values) {
+		StringBuilder response = new StringBuilder();
+		for (Object value : values) {
+			response.append(value).append(VALUE_DELIMITER);
+		}
+		response.append(MESSAGE_DELIMITER);
+		return response.toString();
+	}
+	
 	public void handleRequest (String request, Client client) {
 		String[] messageComponents = request.split(MESSAGE_DELIMITER);
 		AbstractEvent event = events.get(messageComponents[0]);
