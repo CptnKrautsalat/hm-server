@@ -9,7 +9,5 @@ import hm.server.Server;
  */
 public abstract class AbstractEvent {
 
-	public void performEvent (Server server, Client client, String[] request) {
-		
-	}
+	public abstract void performEvent (Server server, Client client, String[] request);
 }
