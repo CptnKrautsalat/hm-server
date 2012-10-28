@@ -1,7 +1,7 @@
 package hm.server.event;
 
-import hm.Client;
 import hm.server.Server;
+import hm.server.Server.ServerThread;
 
 /**
  * @author Ole Lorenzen
@@ -9,5 +9,5 @@ import hm.server.Server;
  */
 public abstract class AbstractEvent {
 
-	public abstract void performEvent (Server server, Client client, String[] request);
+	public abstract void performEvent (Server server, ServerThread thread, String[] request);
 }

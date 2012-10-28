@@ -1,7 +1,7 @@
 package hm.server.event;
 
-import hm.Client;
 import hm.server.Server;
+import hm.server.event.player.MoveEntityEvent;
 
 import java.util.HashMap;
 
@@ -11,11 +11,17 @@ import java.util.HashMap;
  */
 public class EventManager {
 	
-	private static final String MESSAGE_DELIMITER = "#";
-	private static final String VALUE_DELIMITER = "%";
+	public static final String MESSAGE_DELIMITER = "#";
+	public static final String VALUE_DELIMITER = "%";
 	
 	private Server server;
 	private HashMap<String, AbstractEvent> events;
+	
+	public EventManager (Server server) {
+		this.server = server;
+		events = new HashMap<String, AbstractEvent>();
+		events.put(MoveEntityEvent.CMD, new MoveEntityEvent());
+	}
 	
 	public static String buildResponse (Object[] values) {
 		StringBuilder response = new StringBuilder();
@@ -26,13 +32,15 @@ public class EventManager {
 		return response.toString();
 	}
 	
-	public void handleRequest (String request, Client client) {
+	public void handleRequest (String request, Server.ServerThread thread) {
 		String[] messageComponents = request.split(MESSAGE_DELIMITER);
-		AbstractEvent event = events.get(messageComponents[0]);
+		String cmd = messageComponents[0];
+		AbstractEvent event = events.get(cmd);
 		if (event == null) {
-			//TODO: error message
+			server.addEntry("Unkown event " +  cmd + "received " + " from client " + thread.getId());
 			return;
 		}
-		event.performEvent(server, client, messageComponents[1].split(VALUE_DELIMITER));
+		server.addEntry("Performing event " + cmd);
+		event.performEvent(server, thread, messageComponents[1].split(VALUE_DELIMITER));
 	}
 }
